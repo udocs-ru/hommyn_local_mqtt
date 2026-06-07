@@ -24,11 +24,11 @@
       "error": {
         "name": "Error",
         "state": {
-          "OK": "No errors",
-          "E1": "Sensor error",
-          "E2": "Communication error",
-          "E3": "Overheat",
-          "E4": "Low voltage"
+          "ok": "No errors",
+          "e1": "Sensor error",
+          "e2": "Communication error",
+          "e3": "Overheat",
+          "e4": "Low voltage"
         }
       }
     },
