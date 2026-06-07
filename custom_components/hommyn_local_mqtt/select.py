@@ -4,8 +4,16 @@ from typing import TYPE_CHECKING, override
 
 from homeassistant.components.select import SelectEntity
 
-from .const import MODE_OPTIONS, POWER_MODE_OPTIONS, POWER_OPTIONS
-from .entity import HommynMqttEntity, HommynTopic, int_payload
+from .const import (
+    MODE_OPTIONS,
+    POWER_MODE_OPTIONS,
+    POWER_OPTIONS,
+    TOPIC_MODE,
+    TOPIC_POWER,
+    TOPIC_POWER_MODE,
+)
+from .entity import HommynMqttEntity, HommynTopic
+from .helpers import int_payload
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
@@ -16,27 +24,24 @@ SPECS = [
     (
         HommynTopic(
             key="mode",
-            translation_key="mode",
-            out_suffix="mode/out",
-            in_suffix="mode/in",
+            out_suffix=TOPIC_MODE,
+            in_suffix=TOPIC_MODE,
         ),
         MODE_OPTIONS,
     ),
     (
         HommynTopic(
             key="power",
-            translation_key="power",
-            out_suffix="power/out",
-            in_suffix="power/in",
+            out_suffix=TOPIC_POWER,
+            in_suffix=TOPIC_POWER,
         ),
         POWER_OPTIONS,
     ),
     (
         HommynTopic(
             key="power_mode",
-            translation_key="power_mode",
-            out_suffix="power_mode/out",
-            in_suffix="power_mode/in",
+            out_suffix=TOPIC_POWER_MODE,
+            in_suffix=TOPIC_POWER_MODE,
         ),
         POWER_MODE_OPTIONS,
     ),

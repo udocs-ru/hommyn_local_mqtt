@@ -2,12 +2,10 @@ from __future__ import annotations
 
 DOMAIN = "hommyn_local_mqtt"
 
-CONF_MAC = "mac"
-CONF_SCAN_TIMEOUT = "scan_timeout"
 CONF_TOPIC_PREFIX = "topic_prefix"
-CONF_DEVICE_NAME = "device_name"
 
 PLATFORMS = ["binary_sensor", "sensor", "number", "switch", "select", "climate"]
+
 
 MODE_OPTIONS = [
     "0",  # Off
@@ -21,7 +19,7 @@ MODE_OPTIONS = [
 POWER_OPTIONS = [
     "0",  # Auto
     "1",  # Low
-    "2",  # "Medium
+    "2",  # Medium
     "3",  # High
     "4",  # Turbo
 ]
@@ -39,21 +37,27 @@ ERROR_OPTIONS = {
     "4": "E4",
 }
 
+TOPIC_CURRENT_TEMPERATURE = "sensor/temperature"
+TOPIC_ERROR = "error"
+TOPIC_BACKLIGHT_AUTO = "backlight_auto"
+TOPIC_TIMER = "timer"
+TOPIC_CHILD_LOCK = "child_lock"
+TOPIC_SOUND = "sound"
+TOPIC_BACKLIGHT = "backlight"
+TOPIC_OPEN_WINDOW = "open_window"
+TOPIC_HALF_POWER = "half_power"
+TOPIC_MODE = "mode"
+TOPIC_POWER = "power"
+TOPIC_POWER_MODE = "power_mode"
+TOPIC_TEMPERATURE_COMFORT = "temperature_comfort"
+TOPIC_TEMPERATURE_ECO = "temperature_eco"
+TOPIC_TEMPERATURE_ANTIFROST = "temperature_antifrost"
+TOPIC_OPEN_WINDOW_DETECT = "open_window_detect"
+
 STATE_SUFFIXES = [
-    "mode/out",
-    "timer/out",
-    "child_lock/out",
-    "backlight/out",
-    "sound/out",
-    "open_window/out",
-    "open_window_detect/out",
-    "sensor/temperature/out",
-    "power/out",
-    "power_mode/out",
-    "temperature_comfort/out",
-    "temperature_eco/out",
-    "temperature_antifrost/out",
-    "error/out",
-    "backlight_auto/out",
-    "half_power/out",
+    f"{TOPIC_MODE}/out",
+    f"{TOPIC_CURRENT_TEMPERATURE}/out",
+    f"{TOPIC_TEMPERATURE_COMFORT}/out",
+    f"{TOPIC_POWER}/out",
+    f"{TOPIC_POWER_MODE}/out",
 ]

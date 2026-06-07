@@ -4,7 +4,17 @@ from typing import TYPE_CHECKING, override
 
 from homeassistant.components.switch import SwitchEntity
 
-from .entity import HommynMqttEntity, HommynTopic, int_payload
+from .const import (
+    TOPIC_BACKLIGHT,
+    TOPIC_BACKLIGHT_AUTO,
+    TOPIC_CHILD_LOCK,
+    TOPIC_HALF_POWER,
+    TOPIC_OPEN_WINDOW,
+    TOPIC_SOUND,
+    TOPIC_TIMER,
+)
+from .entity import HommynMqttEntity, HommynTopic
+from .helpers import int_payload
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
@@ -15,49 +25,42 @@ if TYPE_CHECKING:
 SPECS = [
     HommynTopic(
         key="swing",
-        translation_key="swing",
-        out_suffix="backlight_auto/out",
-        in_suffix="backlight_auto/in",
+        out_suffix=TOPIC_BACKLIGHT_AUTO,
+        in_suffix=TOPIC_BACKLIGHT_AUTO,
     ),
     HommynTopic(
         key="timer",
-        translation_key="timer",
-        out_suffix="timer/out",
-        in_suffix="timer/in",
+        out_suffix=TOPIC_TIMER,
+        in_suffix=TOPIC_TIMER,
         is_enabled=False,
     ),
     HommynTopic(
         key="child_lock",
-        translation_key="child_lock",
-        out_suffix="child_lock/out",
-        in_suffix="child_lock/in",
+        out_suffix=TOPIC_CHILD_LOCK,
+        in_suffix=TOPIC_CHILD_LOCK,
         is_enabled=False,
     ),
     HommynTopic(
         key="sound",
-        translation_key="sound",
-        out_suffix="sound/out",
-        in_suffix="sound/in",
+        out_suffix=TOPIC_SOUND,
+        in_suffix=TOPIC_SOUND,
         is_enabled=False,
     ),
     HommynTopic(
         key="backlight",
-        translation_key="backlight",
-        out_suffix="backlight/out",
-        in_suffix="backlight/in",
+        out_suffix=TOPIC_BACKLIGHT,
+        in_suffix=TOPIC_BACKLIGHT,
     ),
     HommynTopic(
         key="open_window",
-        translation_key="open_window",
-        out_suffix="open_window/out",
-        in_suffix="open_window/in",
+        out_suffix=TOPIC_OPEN_WINDOW,
+        in_suffix=TOPIC_OPEN_WINDOW,
         is_enabled=False,
     ),
     HommynTopic(
         key="half_power",
-        translation_key="half_power",
-        out_suffix="half_power/out",
-        in_suffix="half_power/in",
+        out_suffix=TOPIC_HALF_POWER,
+        in_suffix=TOPIC_HALF_POWER,
         is_enabled=False,
     ),
 ]

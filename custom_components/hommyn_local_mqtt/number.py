@@ -6,6 +6,13 @@ from typing import TYPE_CHECKING, override
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.const import UnitOfTemperature
 
+from .const import (
+    TOPIC_TEMPERATURE_ANTIFROST,
+    TOPIC_TEMPERATURE_COMFORT,
+    TOPIC_TEMPERATURE_ECO,
+)
+from .helpers import float_payload
+
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
@@ -14,7 +21,7 @@ if TYPE_CHECKING:
 from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorStateClass
 
-from .entity import HommynMqttEntity, HommynTopic, float_payload
+from .entity import HommynMqttEntity, HommynTopic
 
 
 @dataclass(frozen=True)
@@ -25,24 +32,22 @@ class NumberSpec:
     step: int
 
 
-SPECS: list[NumberSpec] = [
+SPECS = [
     NumberSpec(
         topic=HommynTopic(
             key="temperature_comfort",
-            translation_key="temperature_comfort",
-            out_suffix="temperature_comfort/out",
-            in_suffix="temperature_comfort/in",
+            out_suffix=TOPIC_TEMPERATURE_COMFORT,
+            in_suffix=TOPIC_TEMPERATURE_COMFORT,
         ),
-        min=17,
+        min=16,
         max=32,
         step=1,
     ),
     NumberSpec(
         topic=HommynTopic(
             key="temperature_eco",
-            translation_key="temperature_eco",
-            out_suffix="temperature_eco/out",
-            in_suffix="temperature_eco/in",
+            out_suffix=TOPIC_TEMPERATURE_ECO,
+            in_suffix=TOPIC_TEMPERATURE_ECO,
             is_enabled=False,
         ),
         min=3,
@@ -52,9 +57,8 @@ SPECS: list[NumberSpec] = [
     NumberSpec(
         topic=HommynTopic(
             key="temperature_antifrost",
-            translation_key="temperature_antifrost",
-            out_suffix="temperature_antifrost/out",
-            in_suffix="temperature_antifrost/in",
+            out_suffix=TOPIC_TEMPERATURE_ANTIFROST,
+            in_suffix=TOPIC_TEMPERATURE_ANTIFROST,
             is_enabled=False,
         ),
         min=3,

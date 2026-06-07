@@ -6,6 +6,9 @@
       },
       "power_mode": {
         "default": "mdi:heat-wave"
+      },
+      "power": {
+        "default": "mdi:weather-windy"
       }
     },
     "switch": {
@@ -32,9 +35,6 @@
       }
     },
     "number": {
-      "heating_power": {
-        "default": "mdi:wind-power-outline"
-      },
       "temperature_comfort": {
         "default": "mdi:home-thermometer-outline"
       },

@@ -8,18 +8,18 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.core import HomeAssistant
 
-from .entity import HommynMqttEntity, HommynTopic, int_payload
+from .const import TOPIC_OPEN_WINDOW_DETECT
+from .entity import HommynMqttEntity, HommynTopic
+from .helpers import int_payload
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-BINARY_SENSORS = [
+SPECS = [
     HommynTopic(
-        key="open_window_detect",
-        translation_key="open_window_detect",
-        out_suffix="open_window_detect/out",
+        key="open_window_detect", out_suffix=TOPIC_OPEN_WINDOW_DETECT, is_enabled=False
     ),
 ]
 
@@ -27,7 +27,7 @@ BINARY_SENSORS = [
 async def async_setup_entry(
     _hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    async_add_entities([HommynBinarySensor(entry, spec) for spec in BINARY_SENSORS])
+    async_add_entities([HommynBinarySensor(entry, spec) for spec in SPECS])
 
 
 class HommynBinarySensor(HommynMqttEntity, BinarySensorEntity):

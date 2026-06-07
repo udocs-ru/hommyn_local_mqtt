@@ -12,8 +12,7 @@
     "+/sensor/temperature/out",
     "+/temperature_comfort/out",
     "+/power/out",
-    "+/power_mode/out",
-    "+/error/out"
+    "+/power_mode/out"
   ],
   "version": "1.0.0"
 }

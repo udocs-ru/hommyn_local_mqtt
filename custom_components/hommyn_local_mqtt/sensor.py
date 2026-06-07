@@ -9,17 +9,18 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import UnitOfTemperature
 
-from .const import ERROR_OPTIONS
-from .entity import HommynMqttEntity, HommynTopic, float_payload, int_payload
+from .const import ERROR_OPTIONS, TOPIC_CURRENT_TEMPERATURE, TOPIC_ERROR
+from .entity import HommynMqttEntity, HommynTopic
+from .helpers import float_payload, int_payload
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-SPECS: list[HommynTopic] = [
-    HommynTopic(key="current_temperature", out_suffix="sensor/temperature/out"),
-    HommynTopic(key="error", translation_key="error", out_suffix="error/out"),
+SPECS = [
+    HommynTopic(key="current_temperature", out_suffix=TOPIC_CURRENT_TEMPERATURE),
+    HommynTopic(key="error", out_suffix=TOPIC_ERROR, is_enabled=False),
 ]
 
 

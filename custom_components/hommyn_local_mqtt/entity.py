@@ -18,15 +18,6 @@ from .const import CONF_TOPIC_PREFIX, DOMAIN
 
 @dataclass(frozen=True)
 class HommynTopic:
-    """
-    Описание MQTT топиков для сущности.
-
-    key: уникальный ключ сущности (например, "climate", "temperature")
-    name: отображаемое имя (например, "Климат", "Температура")
-    out_suffix: суффикс для входящих сообщений (устройство -> HA)
-    in_suffix: суффикс для исходящих команд (HA -> устройство)
-    """
-
     key: str
     out_suffix: str
     in_suffix: str | None = None
@@ -40,21 +31,8 @@ type UnsubscribeType = Callable[[], None]
 
 
 class HommynMqttEntity(Entity):
-    """
-    Базовый класс для всех MQTT сущностей Hommyn.
+    _attr_has_entity_name: bool = True
 
-    Обрабатывает:
-    - Подписку на MQTT топики
-    - Отписку при удалении
-    - Управление устройством и device_info
-    """
-
-    # Аннотации для атрибутов Entity (переопределяем)
-    _attr_has_entity_name: bool = (
-        True  # HA будет использовать имя сущности + имя устройства
-    )
-
-    # Аннотации для собственных атрибутов
     _entry: ConfigEntry
     _spec: HommynTopic
     _prefix: str
@@ -69,19 +47,17 @@ class HommynMqttEntity(Entity):
         # Префикс топика устройства
         self._prefix = cast(str, entry.data[CONF_TOPIC_PREFIX]).strip("/")
 
-        # Название устройства
         self._device_name: str = f"Hommyn {self._prefix}"
-
-        # ID
         self._attr_unique_id = f"{DOMAIN}_{self._prefix}_{spec.key}"
-
         self._attr_entity_registry_enabled_default = spec.is_enabled
-        # Аттрибуты для HA
+
         if spec.name is not None:
             self._attr_name = spec.name
 
         if spec.translation_key is not None:
             self.translation_key = spec.translation_key
+        else:
+            self.translation_key = spec.key
 
         # Информация об устройстве
         self._attr_device_info = DeviceInfo(
@@ -95,14 +71,14 @@ class HommynMqttEntity(Entity):
     @property
     def out_topic(self) -> str:
         """Топик для получения состояния от устройства."""
-        return f"{self._prefix}/{self._spec.out_suffix}"
+        return f"{self._prefix}/{self._spec.out_suffix}/out"
 
     @property
     def in_topic(self) -> str | None:
         """Топик для отправки команд устройству."""
         if self._spec.in_suffix is None:
             return None
-        return f"{self._prefix}/{self._spec.in_suffix}"
+        return f"{self._prefix}/{self._spec.in_suffix}/in"
 
     @override
     async def async_added_to_hass(self) -> None:
@@ -139,44 +115,3 @@ class HommynMqttEntity(Entity):
         if topic is None:
             return
         await mqtt.async_publish(self.hass, topic, payload, 1, False)
-
-
-# ============================================================================
-# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-# ============================================================================
-def int_payload(payload: str) -> int | None:
-    """Преобразует строку payload в целое число."""
-    value = payload.strip()
-    if not value:
-        return None
-    try:
-        return int(value, 0)
-    except ValueError:
-        return None
-
-
-def float_payload(payload: str) -> float | None:
-    """Преобразует строку payload в число с плавающей точкой."""
-    value = payload.strip().replace(",", ".")
-    if not value:
-        return None
-    try:
-        return float(value)
-    except ValueError:
-        return None
-
-
-def bool_payload(
-    payload: str, true_values: tuple[str, ...] = ("ON", "on", "1", "true")
-) -> bool | None:
-    """Преобразует строку payload в булево значение."""
-    value: str = payload.strip()
-    if not value:
-        return None
-    return value in true_values
-
-
-def str_payload(payload: str) -> str | None:
-    """Возвращает строку payload или None, если пустая."""
-    value: str = payload.strip()
-    return value if value else None

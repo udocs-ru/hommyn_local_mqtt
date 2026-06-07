@@ -20,30 +20,15 @@
     }
   },
   "entity": {
-    "sensor": {
-      "error": {
-        "name": "Error",
-        "state": {
-          "ok": "No errors",
-          "e1": "Sensor error",
-          "e2": "Communication error",
-          "e3": "Overheat",
-          "e4": "Low voltage"
-        }
-      }
-    },
     "number": {
-      "heating_power": {
-        "name": "Heating power"
-      },
       "temperature_comfort": {
-        "name": "Target temperature"
+        "name": "Temperature"
       },
       "temperature_eco": {
-        "name": "Delta from comfort temperature"
+        "name": "Target temperature delta"
       },
       "temperature_antifrost": {
-        "name": "Anti-freeze target temperature"
+        "name": "Anti-freeze temperature delta"
       }
     },
     "switch": {
@@ -57,7 +42,7 @@
         "name": "Sound"
       },
       "backlight": {
-        "name": "Screen"
+        "name": "Display"
       },
       "open_window": {
         "name": "Open window detector"
@@ -67,6 +52,18 @@
       },
       "half_power": {
         "name": "Half power"
+      }
+    },
+    "sensor": {
+      "error": {
+        "name": "Error",
+        "state": {
+          "ok": "No errors",
+          "e1": "Sensor error",
+          "e2": "Communication error",
+          "e3": "Overheat",
+          "e4": "Low voltage"
+        }
       }
     },
     "select": {
@@ -81,18 +78,21 @@
           "5": "Fan only"
         }
       },
+      "power": {
+        "name": "Fan speed",
+        "state": {
+          "0": "Auto",
+          "1": "Low",
+          "2": "Medium",
+          "3": "High",
+          "4": "Turbo"
+        }
+      },
       "power_mode": {
-        "name": "Heating mode",
+        "name": "Fan mode",
         "state": {
           "0": "Manual",
           "1": "Auto"
-        }
-      },
-      "backlight": {
-        "name": "Backlight brightness",
-        "state": {
-          "0": "50%",
-          "1": "100%"
         }
       }
     },
