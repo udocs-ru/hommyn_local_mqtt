@@ -1,0 +1,102 @@
+{
+  "title": "Hommyn local MQTT",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Hommyn device",
+        "description": "If the device is not listed, try sending any commands from the remote control and try again.",
+        "data": {
+          "topic_prefix": "Newly discovered MQTT topics"
+        }
+      }
+    },
+    "error": {
+      "no_topic_selected": "No topic selected"
+    },
+    "abort": {
+      "mqtt_not_configured": "MQTT integration is not available",
+      "all_configured": "No new topics found. Try sending any commands from the remote control and try again.",
+      "no_device_found": "No topics found. Try sending any commands from the remote control and try again."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "error": {
+        "name": "Error",
+        "state": {
+          "OK": "No errors",
+          "E1": "Sensor error",
+          "E2": "Communication error",
+          "E3": "Overheat",
+          "E4": "Low voltage"
+        }
+      }
+    },
+    "number": {
+      "heating_power": {
+        "name": "Heating power"
+      },
+      "temperature_comfort": {
+        "name": "Target temperature"
+      },
+      "temperature_eco": {
+        "name": "Delta from comfort temperature"
+      },
+      "temperature_antifrost": {
+        "name": "Anti-freeze target temperature"
+      }
+    },
+    "switch": {
+      "timer": {
+        "name": "Timer"
+      },
+      "child_lock": {
+        "name": "Child lock"
+      },
+      "sound": {
+        "name": "Sound"
+      },
+      "open_window": {
+        "name": "Open window detector"
+      },
+      "swing": {
+        "name": "Swing"
+      },
+      "half_power": {
+        "name": "Half power"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "0": "Off",
+          "1": "Auto",
+          "2": "Cool",
+          "3": "Dry",
+          "4": "Heat",
+          "5": "Fan only"
+        }
+      },
+      "power_mode": {
+        "name": "Heating mode",
+        "state": {
+          "0": "Auto",
+          "1": "Manual"
+        }
+      },
+      "backlight": {
+        "name": "Backlight brightness",
+        "state": {
+          "0": "50%",
+          "1": "100%"
+        }
+      }
+    },
+    "binary_sensor": {
+      "open_window_detect": {
+        "name": "Open window"
+      }
+    }
+  }
+}

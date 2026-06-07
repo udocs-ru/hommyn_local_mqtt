@@ -1,0 +1,49 @@
+{
+  "entity": {
+    "select": {
+      "mode": {
+        "default": "mdi:fan"
+      },
+      "power_mode": {
+        "default": "mdi:heat-wave"
+      },
+      "backlight": {
+        "default": "mdi:lightbulb-on-70"
+      }
+    },
+    "switch": {
+      "swing": {
+        "default": "mdi:arrow-split-vertical"
+      },
+      "timer": {
+        "default": "mdi:timer-outline"
+      },
+      "child_lock": {
+        "default": "mdi:account-lock-outline"
+      },
+      "sound": {
+        "default": "mdi:volume-mute"
+      },
+      "open_window": {
+        "default": "mdi:window-closed"
+      },
+      "half_power": {
+        "default": "mdi:power-settings"
+      }
+    },
+    "number": {
+      "heating_power": {
+        "default": "mdi:wind-power-outline"
+      },
+      "temperature_comfort": {
+        "default": "mdi:home-thermometer-outline"
+      },
+      "temperature_eco": {
+        "default": "mdi:sun-thermometer-outline"
+      },
+      "temperature_antifrost": {
+        "default": "mdi:snowflake-thermometer"
+      }
+    }
+  }
+}

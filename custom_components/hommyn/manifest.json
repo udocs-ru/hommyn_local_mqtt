@@ -1,0 +1,22 @@
+{
+  "domain": "hommyn_local_mqtt",
+  "name": "Hommyn local MQTT",
+  "after_dependencies": ["mqtt"],
+  "codeowners": ["@codewec", "@udocs-ru"],
+  "config_flow": true,
+  "dependencies": ["mqtt"],
+  "documentation": "https://github.com/udocs-ru/hommyn_local_mqtt",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/udocs-ru/hommyn_local_mqtt/issues",
+  "requirements": [],
+  "version": "1.0.0",
+  "mqtt": [
+    "+/mode/out",
+    "+/sensor/temperature/out",
+    "+/temperature_comfort/out",
+    "+/power/out",
+    "+/power_mode/out",
+    "+/error/out"
+  ]
+}
