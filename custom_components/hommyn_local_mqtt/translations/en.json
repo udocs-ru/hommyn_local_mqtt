@@ -56,6 +56,9 @@
       "sound": {
         "name": "Sound"
       },
+      "backlight": {
+        "name": "Screen"
+      },
       "open_window": {
         "name": "Open window detector"
       },
@@ -81,8 +84,8 @@
       "power_mode": {
         "name": "Heating mode",
         "state": {
-          "0": "Auto",
-          "1": "Manual"
+          "0": "Manual",
+          "1": "Auto"
         }
       },
       "backlight": {

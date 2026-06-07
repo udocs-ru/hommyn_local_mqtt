@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, override
 
 from homeassistant.components.select import SelectEntity
 
-from .const import BACKLIGHT_OPTIONS, MODE_OPTIONS, POWER_MODE_OPTIONS
+from .const import MODE_OPTIONS, POWER_MODE_OPTIONS, POWER_OPTIONS
 from .entity import HommynMqttEntity, HommynTopic, int_payload
 
 if TYPE_CHECKING:
@@ -24,21 +24,21 @@ SPECS = [
     ),
     (
         HommynTopic(
+            key="power",
+            translation_key="power",
+            out_suffix="power/out",
+            in_suffix="power/in",
+        ),
+        POWER_OPTIONS,
+    ),
+    (
+        HommynTopic(
             key="power_mode",
             translation_key="power_mode",
             out_suffix="power_mode/out",
             in_suffix="power_mode/in",
         ),
         POWER_MODE_OPTIONS,
-    ),
-    (
-        HommynTopic(
-            key="backlight",
-            translation_key="backlight",
-            out_suffix="backlight/out",
-            in_suffix="backlight/in",
-        ),
-        BACKLIGHT_OPTIONS,
     ),
 ]
 
@@ -54,8 +54,6 @@ class HommynSelect(HommynMqttEntity, SelectEntity):
         self, entry: ConfigEntry, spec: HommynTopic, value_map: list[str]
     ) -> None:
         super().__init__(entry, spec)
-        # self._value_map = value_map
-        # self._reverse_map = {label: value for value, label in value_map.items()}
         self._attr_options = value_map
         self._attr_current_option = None
 
@@ -67,7 +65,6 @@ class HommynSelect(HommynMqttEntity, SelectEntity):
 
     @override
     async def async_select_option(self, option: str) -> None:
-        # value = self._reverse_map[option]
         self._attr_current_option = option
         await self._publish(option)
         self.async_write_ha_state()

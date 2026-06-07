@@ -9,6 +9,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import UnitOfTemperature
 
+from .const import ERROR_OPTIONS
 from .entity import HommynMqttEntity, HommynTopic, float_payload, int_payload
 
 if TYPE_CHECKING:
@@ -25,15 +26,11 @@ SPECS: list[HommynTopic] = [
 async def async_setup_entry(
     _hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    """Настройка сенсоров Hommyn."""
     async_add_entities([HommynSensor(entry, spec) for spec in SPECS])
 
 
 class HommynSensor(HommynMqttEntity, SensorEntity):
-    """MQTT-backed Hommyn sensor."""
-
     def __init__(self, entry: ConfigEntry, spec: HommynTopic) -> None:
-        """Инициализация сенсора."""
         super().__init__(entry, spec)
         self._attr_native_value = None
 
@@ -43,16 +40,15 @@ class HommynSensor(HommynMqttEntity, SensorEntity):
             self._attr_state_class = SensorStateClass.MEASUREMENT
         elif spec.key == "error":
             self._attr_device_class = SensorDeviceClass.ENUM
-            self._attr_options = ["OK", "E1", "E2", "E3", "E4"]
+            self._attr_options = list(ERROR_OPTIONS.values())
 
     @override
     def _handle_payload(self, _payload: str) -> None:
+        # Сенсор ошибки
         if self._spec.key == "error":
             code = int_payload(_payload)
             if code is not None:
-                # Преобразуем код в текст
-                error_map = {"0": "OK", "1": "E1", "2": "E2", "3": "E3", "4": "E4"}
-                self._attr_native_value = error_map.get(str(code), _payload)
+                self._attr_native_value = ERROR_OPTIONS.get(str(code), _payload)
             else:
                 self._attr_native_value = _payload
             return

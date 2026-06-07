@@ -6,9 +6,6 @@
       },
       "power_mode": {
         "default": "mdi:heat-wave"
-      },
-      "backlight": {
-        "default": "mdi:lightbulb-on-70"
       }
     },
     "switch": {
@@ -23,6 +20,9 @@
       },
       "sound": {
         "default": "mdi:volume-mute"
+      },
+      "backlight": {
+        "default": "mdi:lightbulb-on-70"
       },
       "open_window": {
         "default": "mdi:window-closed"

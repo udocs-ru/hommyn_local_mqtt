@@ -7,10 +7,12 @@ from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.const import UnitOfTemperature
 
 if TYPE_CHECKING:
-    from _typeshed import StrEnum
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from homeassistant.components.number import NumberDeviceClass
+from homeassistant.components.sensor import SensorStateClass
 
 from .entity import HommynMqttEntity, HommynTopic, float_payload
 
@@ -21,21 +23,9 @@ class NumberSpec:
     min: int
     max: int
     step: int
-    unit: StrEnum | None = None
 
 
 SPECS: list[NumberSpec] = [
-    NumberSpec(
-        topic=HommynTopic(
-            key="power",
-            translation_key="heating_power",
-            out_suffix="power/out",
-            in_suffix="power/in",
-        ),
-        min=0,
-        max=4,
-        step=1,
-    ),
     NumberSpec(
         topic=HommynTopic(
             key="temperature_comfort",
@@ -46,7 +36,6 @@ SPECS: list[NumberSpec] = [
         min=17,
         max=32,
         step=1,
-        unit=UnitOfTemperature.CELSIUS,
     ),
     NumberSpec(
         topic=HommynTopic(
@@ -59,7 +48,6 @@ SPECS: list[NumberSpec] = [
         min=3,
         max=7,
         step=1,
-        unit=UnitOfTemperature.CELSIUS,
     ),
     NumberSpec(
         topic=HommynTopic(
@@ -72,7 +60,6 @@ SPECS: list[NumberSpec] = [
         min=3,
         max=7,
         step=1,
-        unit=UnitOfTemperature.CELSIUS,
     ),
 ]
 
@@ -82,15 +69,13 @@ async def async_setup_entry(
 ) -> None:
     async_add_entities(
         [
-            HommynNumber(entry, spec.topic, spec.min, spec.max, spec.step, spec.unit)
+            HommynNumber(entry, spec.topic, spec.min, spec.max, spec.step)
             for spec in SPECS
         ]
     )
 
 
 class HommynNumber(HommynMqttEntity, NumberEntity):
-    """MQTT-backed Hommyn number."""
-
     _attr_mode = NumberMode.SLIDER
 
     def __init__(
@@ -100,13 +85,19 @@ class HommynNumber(HommynMqttEntity, NumberEntity):
         min_value: float,
         max_value: float,
         step: float,
-        unit: str | None,
     ) -> None:
         super().__init__(entry, spec)
+        if spec.key == "temperature_comfort":
+            self._attr_device_class = NumberDeviceClass.TEMPERATURE
+        else:
+            self._attr_device_class = NumberDeviceClass.TEMPERATURE_DELTA
+
+        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+
         self._attr_native_min_value = min_value
         self._attr_native_max_value = max_value
         self._attr_native_step = step
-        self._attr_native_unit_of_measurement = unit
         self._attr_native_value = None
 
     @override

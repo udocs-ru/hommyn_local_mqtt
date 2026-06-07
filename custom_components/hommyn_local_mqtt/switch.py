@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, override
 
 from homeassistant.components.switch import SwitchEntity
 
-# from voluptuous.schema_builder import Object
 from .entity import HommynMqttEntity, HommynTopic, int_payload
 
 if TYPE_CHECKING:
@@ -40,6 +39,12 @@ SPECS = [
         out_suffix="sound/out",
         in_suffix="sound/in",
         is_enabled=False,
+    ),
+    HommynTopic(
+        key="backlight",
+        translation_key="backlight",
+        out_suffix="backlight/out",
+        in_suffix="backlight/in",
     ),
     HommynTopic(
         key="open_window",

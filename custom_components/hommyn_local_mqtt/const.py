@@ -1,5 +1,3 @@
-"""Constants for Hommyn local MQTT."""
-
 from __future__ import annotations
 
 DOMAIN = "hommyn_local_mqtt"
@@ -12,22 +10,25 @@ CONF_DEVICE_NAME = "device_name"
 PLATFORMS = ["binary_sensor", "sensor", "number", "switch", "select", "climate"]
 
 MODE_OPTIONS = [
-    "0",  # : "Off",
-    "1",  # : "Auto",
-    "2",  # : "Cooling",
-    "3",  # : "Dry",
-    "4",  # : "Heating",
-    "5",  # : "Fan",
+    "0",  # Off
+    "1",  # Auto
+    "2",  # Cooling
+    "3",  # Dry
+    "4",  # Heating
+    "5",  # Fan
 ]
 
-BACKLIGHT_OPTIONS = [
-    "0",  # : "50%",
-    "1",  # : "100%",
+POWER_OPTIONS = [
+    "0",  # Auto
+    "1",  # Low
+    "2",  # "Medium
+    "3",  # High
+    "4",  # Turbo
 ]
 
 POWER_MODE_OPTIONS = [
-    "0",  # : "Auto",
-    "1",  # : "Manual",
+    "0",  # Manual
+    "1",  # Auto
 ]
 
 ERROR_OPTIONS = {
