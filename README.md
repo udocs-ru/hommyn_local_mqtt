@@ -1,5 +1,5 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![GitHub Release](https://img.shields.io/github/v/release/udocs-ru/hommyn_local_mqtt)](https://github.com/udocs-ru/ha_vk_notify/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/udocs-ru/hommyn_local_mqtt)](https://github.com/udocs-ru/hommyn_local_mqtt/releases)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-compatible-blue.svg)](https://www.home-assistant.io/)
 [![License](https://img.shields.io/github/license/udocs-ru/hommyn_local_mqtt.svg)](https://github.com/udocs-ru/hommyn_local_mqtt/blob/main/LICENSE)
 
