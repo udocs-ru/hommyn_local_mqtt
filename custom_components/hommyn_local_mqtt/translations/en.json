@@ -99,10 +99,10 @@
     "binary_sensor": {
       "open_window_detect": {
         "name": "Open window"
+      },
+      "connected": {
+        "name": "Connected"
       }
-    },
-    "connected": {
-      "name": "Connected"
     }
   }
 }
