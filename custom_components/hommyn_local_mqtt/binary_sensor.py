@@ -8,7 +8,7 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.core import HomeAssistant
 
-from .const import TOPIC_OPEN_WINDOW_DETECT
+from .const import TOPIC_CONNECTED, TOPIC_OPEN_WINDOW_DETECT
 from .entity import HommynMqttEntity, HommynTopic
 from .helpers import int_payload
 
@@ -19,7 +19,13 @@ if TYPE_CHECKING:
 
 SPECS = [
     HommynTopic(
-        key="open_window_detect", out_suffix=TOPIC_OPEN_WINDOW_DETECT, is_enabled=False
+        key="open_window_detect",
+        out_suffix=TOPIC_OPEN_WINDOW_DETECT,
+        is_enabled=False,
+    ),
+    HommynTopic(
+        key="connected",
+        out_suffix=TOPIC_CONNECTED,
     ),
 ]
 
@@ -31,10 +37,12 @@ async def async_setup_entry(
 
 
 class HommynBinarySensor(HommynMqttEntity, BinarySensorEntity):
-    _attr_device_class = BinarySensorDeviceClass.WINDOW
-
     def __init__(self, entry: ConfigEntry, spec: HommynTopic) -> None:
         super().__init__(entry, spec)
+        if spec.key == "open_window_detect":
+            self._attr_device_class = BinarySensorDeviceClass.WINDOW
+        elif spec.key == "connected":
+            _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
         self._attr_is_on = None
 
     @override

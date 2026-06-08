@@ -99,6 +99,9 @@
     "binary_sensor": {
       "open_window_detect": {
         "name": "Открытое окно"
+      },
+      "connected": {
+        "name": "Подключено"
       }
     }
   }

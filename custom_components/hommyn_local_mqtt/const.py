@@ -37,6 +37,7 @@ ERROR_OPTIONS = {
     "4": "E4",
 }
 
+TOPIC_CONNECTED = "connected"
 TOPIC_CURRENT_TEMPERATURE = "sensor/temperature"
 TOPIC_ERROR = "error"
 TOPIC_BACKLIGHT_AUTO = "backlight_auto"
@@ -55,6 +56,7 @@ TOPIC_TEMPERATURE_ANTIFROST = "temperature_antifrost"
 TOPIC_OPEN_WINDOW_DETECT = "open_window_detect"
 
 STATE_SUFFIXES = [
+    f"{TOPIC_CONNECTED}/out",
     f"{TOPIC_MODE}/out",
     f"{TOPIC_CURRENT_TEMPERATURE}/out",
     f"{TOPIC_TEMPERATURE_COMFORT}/out",

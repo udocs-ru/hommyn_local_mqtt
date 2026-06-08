@@ -8,6 +8,7 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/udocs-ru/hommyn_local_mqtt/issues",
   "mqtt": [
+    "+/connected/out",
     "+/mode/out",
     "+/sensor/temperature/out",
     "+/temperature_comfort/out",
