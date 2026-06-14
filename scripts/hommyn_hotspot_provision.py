@@ -13,17 +13,12 @@ from typing import Iterable
 
 from hommyn_proto import (
     CMD_HANDSHAKE,
-    CMD_TIME_SYNC,
-    CMD_WIFI_CONFIG,
-    CMD_WIFI_LIST,
     FRAME_ACK,
     FRAME_CMD,
     FRAME_NAK,
     parse_frame,
-    parse_wifi_list,
     plain_ack_frame,
     plain_cmd_frame,
-    wifi_config_payload,
 )
 
 
@@ -36,7 +31,9 @@ def mac_bytes(value: str) -> bytes:
 
 def default_gateway() -> str | None:
     try:
-        out = subprocess.check_output(["ip", "route", "show", "default"], text=True, timeout=2)
+        out = subprocess.check_output(
+            ["ip", "route", "show", "default"], text=True, timeout=2
+        )
     except Exception:
         return None
     for line in out.splitlines():
@@ -46,7 +43,9 @@ def default_gateway() -> str | None:
     return None
 
 
-def send_cmd(sock: socket.socket, target: tuple[str, int], seq: int, cmd: int, payload: bytes) -> None:
+def send_cmd(
+    sock: socket.socket, target: tuple[str, int], seq: int, cmd: int, payload: bytes
+) -> None:
     sock.sendto(plain_cmd_frame(seq, cmd, payload), target)
 
 
@@ -68,7 +67,12 @@ def read_frames(sock: socket.socket, timeout: float):
         yield addr, parsed
 
 
-def read_until(sock: socket.socket, target: tuple[str, int], timeout: float, wanted_cmd: int | None = None):
+def read_until(
+    sock: socket.socket,
+    target: tuple[str, int],
+    timeout: float,
+    wanted_cmd: int | None = None,
+):
     for _addr, (seq, frame_type, payload) in read_frames(sock, timeout):
         if frame_type == FRAME_CMD:
             if payload:
@@ -87,7 +91,9 @@ def read_until(sock: socket.socket, target: tuple[str, int], timeout: float, wan
     return None
 
 
-def hotspot_handshake(sock: socket.socket, target: tuple[str, int], timeout: float) -> dict[str, object]:
+def hotspot_handshake(
+    sock: socket.socket, target: tuple[str, int], timeout: float
+) -> dict[str, object]:
     send_cmd(sock, target, 0, CMD_HANDSHAKE, b"\x00" * 16)
     result = read_until(sock, target, timeout, CMD_HANDSHAKE)
     if result is None:
@@ -99,11 +105,20 @@ def hotspot_handshake(sock: socket.socket, target: tuple[str, int], timeout: flo
     firmware = f"{body[2]}.{body[3]}"
     mode = body[4]
     token = body[5:21]
-    print(f"Handshake: protocol={protocol} firmware={firmware} mode={mode} token={token.hex()}")
-    return {"protocol": protocol, "firmware": firmware, "mode": mode, "token": token.hex()}
+    print(
+        f"Handshake: protocol={protocol} firmware={firmware} mode={mode} token={token.hex()}"
+    )
+    return {
+        "protocol": protocol,
+        "firmware": firmware,
+        "mode": mode,
+        "token": token.hex(),
+    }
 
 
-def send_time_sync(sock: socket.socket, target: tuple[str, int], seq: int, timeout: float) -> None:
+def send_time_sync(
+    sock: socket.socket, target: tuple[str, int], seq: int, timeout: float
+) -> None:
     now = int(time.time())
     offset_min = -time.timezone // 60
     payload = struct.pack("<ih", now, offset_min)
@@ -111,51 +126,6 @@ def send_time_sync(sock: socket.socket, target: tuple[str, int], seq: int, timeo
     for _addr, (resp_seq, frame_type, _payload) in read_frames(sock, timeout):
         if frame_type == FRAME_ACK and resp_seq == seq:
             return
-
-
-def request_wifi_list(sock: socket.socket, target: tuple[str, int], timeout: float) -> list[dict[str, object]]:
-    send_cmd(sock, target, 2, CMD_WIFI_LIST, b"")
-    for _addr, (seq, frame_type, payload) in read_frames(sock, timeout):
-        if frame_type == FRAME_NAK:
-            print("Device returned NAK for WiFi list request.")
-            return []
-        if frame_type != FRAME_CMD or not payload:
-            continue
-        send_ack(sock, target, seq)
-        if payload[0] == CMD_WIFI_LIST:
-            aps = parse_wifi_list(payload[1:])
-            if aps:
-                print("WiFi APs from device scan:")
-                for ap in aps:
-                    print(f"  {ap['ssid']} bssid={ap['bssid']} rssi={ap['rssi']} channel={ap['channel']}")
-            return aps
-        if frame_type == FRAME_ACK and seq == 0:
-            return []
-    return []
-
-
-def select_bssid(aps: list[dict[str, object]], ssid: str, explicit_bssid: str | None) -> bytes:
-    if explicit_bssid:
-        return mac_bytes(explicit_bssid)
-    matches = [ap for ap in aps if ap.get("ssid") == ssid]
-    if len(matches) == 1:
-        print(f"Using AP {matches[0]['ssid']} bssid={matches[0]['bssid']} rssi={matches[0]['rssi']}")
-        return mac_bytes(str(matches[0]["bssid"]))
-    if len(matches) > 1:
-        for idx, ap in enumerate(matches, 1):
-            print(f"{idx:2d}. {ap['ssid']} bssid={ap['bssid']} rssi={ap['rssi']} channel={ap['channel']}")
-        while True:
-            raw = input("Select WiFi AP number: ").strip()
-            try:
-                selected = int(raw)
-            except ValueError:
-                print("Enter a number.")
-                continue
-            if 1 <= selected <= len(matches):
-                return mac_bytes(str(matches[selected - 1]["bssid"]))
-            print("Number out of range.")
-    print("SSID was not found in device WiFi scan; using ff:ff:ff:ff:ff:ff as wildcard BSSID.")
-    return b"\xff" * 6
 
 
 def configure(args: argparse.Namespace) -> None:
@@ -175,7 +145,9 @@ def configure(args: argparse.Namespace) -> None:
                 "port": args.port,
                 **handshake,
             }
-            Path(args.out).write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
+            Path(args.out).write_text(
+                json.dumps(record, indent=2, sort_keys=True) + "\n"
+            )
             print(f"Saved token to {args.out}")
 
         send_time_sync(sock, target, 1, args.timeout)
@@ -186,23 +158,33 @@ def configure(args: argparse.Namespace) -> None:
             aps = request_wifi_list(sock, target, args.timeout)
 
         bssid = select_bssid(aps, args.ssid, args.bssid)
-        payload = wifi_config_payload(args.ssid, args.wifi_password, args.mqtt_host, bssid)
+        payload = wifi_config_payload(
+            args.ssid, args.wifi_password, args.mqtt_host, bssid
+        )
 
         seq = 3
         for attempt in range(1, args.retries + 1):
             print(f"Sending WiFi config attempt {attempt}/{args.retries}")
             send_cmd(sock, target, seq, CMD_WIFI_CONFIG, payload)
-            for _addr, (resp_seq, frame_type, resp_payload) in read_frames(sock, args.timeout):
+            for _addr, (resp_seq, frame_type, resp_payload) in read_frames(
+                sock, args.timeout
+            ):
                 if frame_type == FRAME_ACK and resp_seq == seq:
                     print("ACK received.")
                     return
                 if frame_type == FRAME_NAK:
                     raise SystemExit("Device returned NAK for WiFi config.")
-                if frame_type == FRAME_CMD and resp_payload and resp_payload[0] == CMD_WIFI_CONFIG:
+                if (
+                    frame_type == FRAME_CMD
+                    and resp_payload
+                    and resp_payload[0] == CMD_WIFI_CONFIG
+                ):
                     send_ack(sock, target, resp_seq)
                     status = resp_payload[1] if len(resp_payload) > 1 else None
                     result = resp_payload[2] if len(resp_payload) > 2 else None
-                    print(f"WiFi status: status={status} result={result} raw={resp_payload[1:].hex()}")
+                    print(
+                        f"WiFi status: status={status} result={result} raw={resp_payload[1:].hex()}"
+                    )
                     if status == 1:
                         return
             seq = (seq + 1) & 0xFF
@@ -211,17 +193,40 @@ def configure(args: argparse.Namespace) -> None:
 
 
 def main(argv: Iterable[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Configure Hommyn device through WFN-02/hotspot UDP mode.")
-    parser.add_argument("--ssid", required=True, help="Home WiFi SSID to send to the device")
+    parser = argparse.ArgumentParser(
+        description="Configure Hommyn device through WFN-02/hotspot UDP mode."
+    )
+    parser.add_argument(
+        "--ssid", required=True, help="Home WiFi SSID to send to the device"
+    )
     parser.add_argument("--wifi-password", required=True, help="Home WiFi password")
-    parser.add_argument("--mqtt-host", help="Optional MQTT host to include in CmdWifiConfiguration payload")
-    parser.add_argument("--bssid", help="Home WiFi BSSID; if omitted, ask device for WiFi list and select matching SSID")
-    parser.add_argument("--gateway", help="Hotspot gateway IP; default: system default gateway, then 192.168.4.1")
+    parser.add_argument(
+        "--mqtt-host",
+        help="Optional MQTT host to include in CmdWifiConfiguration payload",
+    )
+    parser.add_argument(
+        "--bssid",
+        help="Home WiFi BSSID; if omitted, ask device for WiFi list and select matching SSID",
+    )
+    parser.add_argument(
+        "--gateway",
+        help="Hotspot gateway IP; default: system default gateway, then 192.168.4.1",
+    )
     parser.add_argument("--port", type=int, default=41122, help="Hotspot UDP port")
-    parser.add_argument("--timeout", type=float, default=4.0, help="UDP response timeout")
+    parser.add_argument(
+        "--timeout", type=float, default=4.0, help="UDP response timeout"
+    )
     parser.add_argument("--retries", type=int, default=3, help="WiFi config retries")
-    parser.add_argument("--no-scan", action="store_true", help="Do not request WiFi AP list before configuration")
-    parser.add_argument("--out", default="hommyn_hotspot_device.json", help="Output JSON for token returned by hotspot handshake")
+    parser.add_argument(
+        "--no-scan",
+        action="store_true",
+        help="Do not request WiFi AP list before configuration",
+    )
+    parser.add_argument(
+        "--out",
+        default="hommyn_hotspot_device.json",
+        help="Output JSON for token returned by hotspot handshake",
+    )
     args = parser.parse_args(argv)
     configure(args)
     return 0

@@ -5,7 +5,12 @@ import argparse
 import re
 from typing import Iterable
 
-from hommyn_proto import choose, discover_mdns, load_device_record, send_udp_secure_open_mqtt
+from hommyn_proto import (
+    choose,
+    discover_mdns,
+    load_device_record,
+    send_udp_secure_open_mqtt,
+)
 
 
 def normalize_mac(value: str) -> str:
@@ -39,16 +44,37 @@ def select_device(devices, mac: str | None):
 
 
 def main(argv: Iterable[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Set custom MQTT on a protocol v3 Hommyn device using saved token.")
-    parser.add_argument("--keys", default="hommyn_device.json", help="JSON saved by hommyn_ble_provision.py")
+    parser = argparse.ArgumentParser(
+        description="Set custom MQTT on a protocol v3 Hommyn device using saved token."
+    )
+    parser.add_argument(
+        "--keys",
+        default="hommyn_device.json",
+        help="JSON saved by hommyn_ble_provision.py",
+    )
     parser.add_argument("--host", required=True, help="MQTT broker hostname or IP")
     parser.add_argument("--port", type=int, default=1883, help="MQTT broker port")
     parser.add_argument("--user", default="", help="MQTT username")
     parser.add_argument("--password", default="", help="MQTT password")
-    parser.add_argument("--secure", action="store_true", help="Set SSL/TLS flag; usually use port 8883")
-    parser.add_argument("--mac", help="Device MAC to select from mDNS; defaults to macaddr from --keys if present")
-    parser.add_argument("--discover-timeout", type=float, default=5.0, help="mDNS discovery time in seconds")
-    parser.add_argument("--timeout", type=float, default=4.0, help="UDP handshake/ACK timeout in seconds")
+    parser.add_argument(
+        "--secure", action="store_true", help="Set SSL/TLS flag; usually use port 8883"
+    )
+    parser.add_argument(
+        "--mac",
+        help="Device MAC to select from mDNS; defaults to macaddr from --keys if present",
+    )
+    parser.add_argument(
+        "--discover-timeout",
+        type=float,
+        default=5.0,
+        help="mDNS discovery time in seconds",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=4.0,
+        help="UDP handshake/ACK timeout in seconds",
+    )
     args = parser.parse_args(argv)
 
     record = load_device_record(args.keys)
@@ -77,7 +103,9 @@ def main(argv: Iterable[str] | None = None) -> int:
         secure=args.secure,
         timeout=args.timeout,
     )
-    print(f"MQTT settings sent to {device.addresses[0]}:{device.port} mac={device.mac or '-'}")
+    print(
+        f"MQTT settings sent to {device.addresses[0]}:{device.port} mac={device.mac or '-'}"
+    )
     return 0
 
 
